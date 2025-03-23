@@ -6,7 +6,7 @@ export const sortUsers = () => {
   let isSort = false;
 
   headerSortIsChildren.style.cursor = "pointer";
-  // getSortUsers
+
   headerSortIsChildren.addEventListener("click", () => {
     userService
       .getSortUsers({
@@ -15,7 +15,8 @@ export const sortUsers = () => {
       })
       .then((users) => {
         render(users);
-      });
+      })
+      .catch((error) => console.log(error.message));
 
     isSort = !isSort;
   });

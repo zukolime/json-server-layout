@@ -1,63 +1,80 @@
 export class UserService {
-  getUsers() {
-    return fetch("http://localhost:4545/users").then((res) => res.json());
+  async getData(url, options) {
+    try {
+      const res = await fetch(url, options);
+      return await res.json();
+    } catch (error) {
+      console.log(`Oops: ${error.message}`);
+      this.showError("Произошла ошибка, данных нет!");
+    }
   }
 
-  addUser(user) {
-    return fetch("http://localhost:4545/users", {
-      method: "POST",
+  async sendData(url, method, data) {
+    const options = {
+      method,
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(user),
-    }).then((res) => res.json());
+      body: data ? JSON.stringify(data) : null,
+    };
+    return await this.getData(url, options);
   }
 
-  removeUser(id) {
-    return fetch(`http://localhost:4545/users/${id}`, {
-      method: "DELETE",
-    }).then((res) => res.json());
+  async getUsers() {
+    return await this.getData("http://localhost:4545/users");
   }
 
-  changeUser(id, data) {
-    return fetch(`http://localhost:4545/users/${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    }).then((res) => res.json());
+  async addUser(user) {
+    return await this.sendData("http://localhost:4545/users", "POST", user);
   }
 
-  getUser(id) {
-    return fetch(`http://localhost:4545/users/${id}`).then((res) => res.json());
+  async removeUser(id) {
+    return await this.sendData(`http://localhost:4545/users/${id}`, "DELETE");
   }
 
-  editUser(id, user) {
-    return fetch(`http://localhost:4545/users/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(user),
-    }).then((res) => res.json());
-  }
-
-  filterUsers(filterOption) {
-    return fetch(`http://localhost:4545/users?${filterOption}=true`).then(
-      (res) => res.json()
+  async changeUser(id, data) {
+    return await this.sendData(
+      `http://localhost:4545/users/${id}`,
+      "PATCH",
+      data
     );
   }
 
-  getSortUsers(sortOption) {
-    return fetch(
+  async getUser(id) {
+    return await this.getData(`http://localhost:4545/users/${id}`);
+  }
+
+  async editUser(id, user) {
+    return await this.sendData(
+      `http://localhost:4545/users/${id}`,
+      "PUT",
+      user
+    );
+  }
+
+  async filterUsers(filterOption) {
+    return await this.getData(
+      `http://localhost:4545/users?${filterOption}=true`
+    );
+  }
+
+  async getSortUsers(sortOption) {
+    return await this.getData(
       `http://localhost:4545/users?_sort=${sortOption.name}&_order=${sortOption.value}`
-    ).then((res) => res.json());
+    );
   }
 
-  getSearchUsers(str) {
-    return fetch(`http://localhost:4545/users?name_like=${str}`).then((res) =>
-      res.json()
-    );
+  async getSearchUsers(str) {
+    return await this.getData(`http://localhost:4545/users?name_like=${str}`);
+  }
+
+  showError(message) {
+    const table = document.querySelector(".table-responsive");
+    const errorMessage = document.createElement("p");
+
+    errorMessage.textContent = message;
+    errorMessage.style.color = "red";
+    errorMessage.style.textAlign = "center";
+    table.append(errorMessage);
   }
 }

@@ -15,18 +15,11 @@
       "id": 2
     },
     {
-      "name": "Alex",
-      "email": "alex@test.test",
-      "children": false,
-      "permissions": true,
-      "id": 3
-    },
-    {
-      "name": "Alex123",
+      "name": "qwer",
       "email": "qwr@qwer.we",
       "children": true,
       "permissions": false,
-      "id": 4
+      "id": 3
     }
   ]
 }

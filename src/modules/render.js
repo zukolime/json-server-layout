@@ -3,10 +3,11 @@ export const render = (users) => {
 
   tbody.innerHTML = "";
 
-  users.forEach((user) => {
-    tbody.insertAdjacentHTML(
-      "beforeend",
-      `
+  if (users) {
+    users.forEach((user) => {
+      tbody.insertAdjacentHTML(
+        "beforeend",
+        `
         <tr data-key=${user.id}>
           <th scope="row">${user.id}</th>
           <td>${user.name}</td>
@@ -39,6 +40,7 @@ export const render = (users) => {
           </td>
         </tr>
       `
-    );
-  });
+      );
+    });
+  }
 };
